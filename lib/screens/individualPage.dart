@@ -176,19 +176,30 @@ class _IndividualPageState extends State<IndividualPage> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 IconButton(
-                                                    onPressed: () {},
+                                                    onPressed: () {
+                                                      Scaffold.of(context)
+                                                          .showBottomSheet<
+                                                                  void>(
+                                                              (BuildContext
+                                                                  context) {
+                                                        return bottomsheet();
+                                                      },
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .transparent);
+
+                                                      // showBottomSheet(
+                                                      //     backgroundColor:
+                                                      //         Colors
+                                                      //             .transparent,
+                                                      //     context: context,
+                                                      //     builder: (builder) =>
+                                                      //         bottomsheet());
+                                                    },
                                                     icon: Icon(
                                                         Icons.attach_file)),
                                                 IconButton(
-                                                    onPressed: () {
-                                                      showBottomSheet(
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .transparent,
-                                                          context: context,
-                                                          builder: (builder) =>
-                                                              bottomsheet());
-                                                    },
+                                                    onPressed: () {},
                                                     icon:
                                                         Icon(Icons.camera_alt)),
                                               ]),
@@ -200,14 +211,14 @@ class _IndividualPageState extends State<IndividualPage> {
                               radius: 25,
                               backgroundColor: Color(0xff128c7e),
                               child: IconButton(
-                                icon: Icon(Icons.mic),
+                                icon: const Icon(Icons.mic),
                                 onPressed: () {},
                               ),
                             ),
                           )
                         ]),
                         show
-                            ? Container(
+                            ? SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.38,
                                 child: emojiSelect())
@@ -221,11 +232,11 @@ class _IndividualPageState extends State<IndividualPage> {
   }
 
   Widget bottomsheet() {
-    return Container(
+    return SizedBox(
       height: 278,
-      width: MediaQuery.of(context).size.width,
+      // width: MediaQuery.of(context).size.width,
       child: Card(
-        margin: EdgeInsets.all(18),
+        margin: const EdgeInsets.all(18),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
           child: Column(children: [
