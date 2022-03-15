@@ -177,24 +177,10 @@ class _IndividualPageState extends State<IndividualPage> {
                                               children: [
                                                 IconButton(
                                                     onPressed: () {
-                                                      Scaffold.of(context)
-                                                          .showBottomSheet<
-                                                                  void>(
-                                                              (BuildContext
-                                                                  context) {
-                                                        return bottomsheet();
-                                                      },
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .transparent);
-
-                                                      // showBottomSheet(
-                                                      //     backgroundColor:
-                                                      //         Colors
-                                                      //             .transparent,
-                                                      //     context: context,
-                                                      //     builder: (builder) =>
-                                                      //         bottomsheet());
+                                                      showModalBottomSheet(
+                                                          context: context,
+                                                          builder: (context) =>
+                                                              bottomsheet());
                                                     },
                                                     icon: Icon(
                                                         Icons.attach_file)),
@@ -234,14 +220,14 @@ class _IndividualPageState extends State<IndividualPage> {
   Widget bottomsheet() {
     return SizedBox(
       height: 278,
-      // width: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width,
       child: Card(
         margin: const EdgeInsets.all(18),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
           child: Column(children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 iconcreation(
                     Icons.insert_drive_file, Colors.indigo, "Documents"),
@@ -251,12 +237,10 @@ class _IndividualPageState extends State<IndividualPage> {
             ),
             const SizedBox(height: 30),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 iconcreation(Icons.headset, Colors.orange, "Audio"),
-                const SizedBox(width: 40),
                 iconcreation(Icons.location_pin, Colors.pink, "Location"),
-                const SizedBox(width: 40),
                 iconcreation(Icons.person, Colors.purple, "Contact")
               ],
             )
