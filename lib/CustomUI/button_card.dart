@@ -14,17 +14,14 @@ class ButtonCard extends StatefulWidget {
 class _ButtonCardState extends State<ButtonCard> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Color(0xff25d366),
-          radius: 23,
-          child: Icon(widget.icon, size: 26, color: Colors.white),
-        ),
-        title: Text(widget.name,
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: Color(0xff25d366),
+        radius: 23,
+        child: Icon(widget.icon, size: 26, color: Colors.white),
       ),
+      title: Text(widget.name,
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
     );
   }
 }
