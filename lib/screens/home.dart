@@ -1,10 +1,15 @@
+import 'package:chats/Model/Chatmodel.dart';
 import 'package:chats/Pages/Chat_page.dart';
 import 'package:flutter/material.dart';
 
 import '../Pages/Camera_page.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen(
+      {Key? key, required this.chatmodels, required this.sourcechat})
+      : super(key: key);
+  final List<ChatModel> chatmodels;
+  final ChatModel sourcechat;
 
   @override
   _HomeScreensState createState() => _HomeScreensState();
@@ -57,9 +62,12 @@ class _HomeScreensState extends State<HomeScreen>
       ),
       body: TabBarView(
         controller: _controller,
-        children: const [
+        children: [
           CameraPage(),
-          ChatPage(),
+          ChatPage(
+            sourchat: widget.sourcechat,
+            chatmodels: widget.chatmodels,
+          ),
           Text("status"),
           Text("calls")
         ],

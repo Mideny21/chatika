@@ -4,7 +4,10 @@ import 'package:chats/screens/ScreenContact.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key}) : super(key: key);
+  ChatPage({Key? key, required this.chatmodels, required this.sourchat})
+      : super(key: key);
+  final List<ChatModel> chatmodels;
+  final ChatModel sourchat;
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -47,17 +50,19 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (builder) => SelectContact()));
-          },
-          child: const Icon(Icons.chat),
-        ),
-        body: ListView.builder(
-          itemCount: chats.length,
-          itemBuilder: (context, index) => CustomCard(chatModel: chats[index]),
-        ));
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).primaryColor,
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (builder) => SelectContact()));
+        },
+        child: const Icon(Icons.chat),
+      ),
+      body: ListView.builder(
+        itemCount: widget.chatmodels.length,
+        itemBuilder: (context, index) => CustomCard(
+            chatModel: widget.chatmodels[index], sourchat: widget.sourchat),
+      ),
+    );
   }
 }

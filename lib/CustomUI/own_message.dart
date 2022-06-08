@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class OwnerMessage extends StatelessWidget {
-  const OwnerMessage({Key? key}) : super(key: key);
+  const OwnerMessage({Key? key, required this.message}) : super(key: key);
+  final String message;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class OwnerMessage extends StatelessWidget {
                 padding: const EdgeInsets.only(
                     left: 10, right: 60, top: 5, bottom: 20),
                 child: Text(
-                  "Hey fsssfvmrvwirvmwomvwormiorimvskfms;lmvls;mvwpemowv",
+                  message,
                   style: TextStyle(fontSize: 16),
                 ),
               ),

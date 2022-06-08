@@ -3,8 +3,10 @@ import 'package:chats/screens/individualPage.dart';
 import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
-  const CustomCard({Key? key, required this.chatModel}) : super(key: key);
+  const CustomCard({Key? key, required this.chatModel, required this.sourchat})
+      : super(key: key);
   final ChatModel chatModel;
+  final ChatModel sourchat;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +15,10 @@ class CustomCard extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => IndividualPage(chatModel: chatModel)));
+                builder: (context) => IndividualPage(
+                      chatModel: chatModel,
+                      sourchat: sourchat,
+                    )));
       },
       child: Column(
         children: [

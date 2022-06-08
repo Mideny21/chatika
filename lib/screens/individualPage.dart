@@ -3,13 +3,18 @@ import 'dart:io';
 import 'package:chats/CustomUI/own_message.dart';
 import 'package:chats/CustomUI/reply_card.dart';
 import 'package:chats/Model/Chatmodel.dart';
+import 'package:chats/Model/message_model.dart';
 import 'package:flutter/material.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+// import 'package:socket_io_client/socket_io_client.dart';
 
 class IndividualPage extends StatefulWidget {
-  const IndividualPage({Key? key, required this.chatModel}) : super(key: key);
+  const IndividualPage(
+      {Key? key, required this.chatModel, required this.sourchat})
+      : super(key: key);
   final ChatModel chatModel;
+  final ChatModel sourchat;
 
   @override
   _IndividualPageState createState() => _IndividualPageState();
@@ -18,11 +23,43 @@ class IndividualPage extends StatefulWidget {
 class _IndividualPageState extends State<IndividualPage> {
   bool show = false;
   FocusNode focusNode = FocusNode();
-  IO.Socket? socket;
+  late IO.Socket socket;
+  bool sendButton = false;
+  List<MessageModel> messages = [];
 
   final TextEditingController _controller = TextEditingController();
 
-  void connect() {}
+  void connectAndListen() {
+    socket = IO.io(
+        "http://localhost:5000",
+        IO.OptionBuilder()
+            .setTransports(['websocket']) // for Flutter or Dart VM
+            .disableAutoConnect() // disable auto-connection
+            .build());
+    socket.connect();
+    socket.emit("siginin", widget.sourchat.id);
+    socket.onConnect((data) {
+      print("Connected");
+      socket.on("message", (msg) {
+        print(msg);
+        setMessage("destination", msg['message']);
+      });
+    });
+    print(socket.connected);
+  }
+
+  void sendMessage(String message, int sourceId, int targetId) {
+    setMessage("source", message);
+    socket.emit("message",
+        {"message": message, "sourceId": sourceId, "targetId": targetId});
+  }
+
+  void setMessage(String type, String message) {
+    MessageModel messageModel = MessageModel(type: type, message: message);
+    setState(() {
+      messages.add(messageModel);
+    });
+  }
 
   _onEmojiSelected(Emoji emoji) {
     _controller
@@ -41,6 +78,7 @@ class _IndividualPageState extends State<IndividualPage> {
 
   @override
   void initState() {
+    connectAndListen();
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
         setState(() {
@@ -154,20 +192,20 @@ class _IndividualPageState extends State<IndividualPage> {
                   children: [
                     Container(
                       height: MediaQuery.of(context).size.height - 140,
-                      child: ListView(
+                      child: ListView.builder(
+                        itemCount: messages.length,
                         shrinkWrap: true,
-                        children: [
-                          OwnerMessage(),
-                          ReplyCard(),
-                          OwnerMessage(),
-                          ReplyCard(),
-                          OwnerMessage(),
-                          ReplyCard(),
-                          OwnerMessage(),
-                          ReplyCard(),
-                          OwnerMessage(),
-                          ReplyCard(),
-                        ],
+                        itemBuilder: (context, index) {
+                          if (messages[index].type == "source") {
+                            return OwnerMessage(
+                              message: messages[index].message,
+                            );
+                          } else {
+                            return ReplyCard(
+                              message: messages[index].message,
+                            );
+                          }
+                        },
                       ),
                     ),
                     Align(
@@ -192,6 +230,17 @@ class _IndividualPageState extends State<IndividualPage> {
                                         keyboardType: TextInputType.multiline,
                                         maxLines: 5,
                                         minLines: 1,
+                                        onChanged: (value) {
+                                          if (value.isNotEmpty) {
+                                            setState(() {
+                                              sendButton = true;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              sendButton = false;
+                                            });
+                                          }
+                                        },
                                         decoration: InputDecoration(
                                             border: InputBorder.none,
                                             hintText: "Type a message",
@@ -232,8 +281,16 @@ class _IndividualPageState extends State<IndividualPage> {
                                 radius: 25,
                                 backgroundColor: Color(0xff128c7e),
                                 child: IconButton(
-                                  icon: const Icon(Icons.mic),
-                                  onPressed: () {},
+                                  icon: Icon(
+                                      sendButton ? Icons.send : Icons.mic,
+                                      color: Colors.white),
+                                  onPressed: () {
+                                    sendMessage(
+                                        _controller.text,
+                                        widget.sourchat.id!,
+                                        widget.chatModel.id!);
+                                    _controller.clear();
+                                  },
                                 ),
                               ),
                             )
